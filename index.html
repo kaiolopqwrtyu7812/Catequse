@@ -11,8 +11,7 @@
         <h1>Cadastro de Alunos</h1>
         <input type="text" id="pesquisa" placeholder="Buscar aluno pelo nome">
         <button type="button" id="botaoPesquisar">Pesquisar</button>
-        <button type="button" id="botaoLimparPesquisa">LimparPesquisa</button>
-
+        <button type="button" id="botaoLimparPesquisa">Limpar Pesquisa</button>
     </header>
 
     <section id="listaAlunos"></section>
@@ -40,6 +39,13 @@
 
             <label for="dataNascimento">Data de Nascimento:</label>
             <input type="date" id="dataNascimento" required>
+
+            <!-- Campos adicionados -->
+            <label for="saude">Informações de Saúde:</label>
+            <textarea id="saude" placeholder="Descreva condições médicas relevantes"></textarea>
+
+            <label for="problemasAlimentares">Problemas Alimentares:</label>
+            <textarea id="problemasAlimentares" placeholder="Descreva restrições ou alergias alimentares"></textarea>
 
             <button type="submit" id="botaoCadastro">Cadastrar Aluno</button>
         </form>

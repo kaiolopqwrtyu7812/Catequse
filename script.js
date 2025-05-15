@@ -14,13 +14,15 @@ function adicionarCard(aluno) {
         Endereço: ${aluno.endereco}<br>
         Curso: ${aluno.curso}<br>
         Data de Nascimento: ${aluno.dataNascimento}<br>
+        Saúde: ${aluno.saude}<br>
+        Problemas Alimentares: ${aluno.problemasAlimentares}<br>
         <button onclick="removerAluno('${aluno.email}')">Remover</button>
     `;
     lista.appendChild(card);
 }
 
 function coletarDadosAluno() {
-    const campos = ['nome', 'idade', 'email', 'telefone', 'endereco', 'curso', 'dataNascimento'];
+    const campos = ['nome', 'idade', 'email', 'telefone', 'endereco', 'curso', 'dataNascimento', 'saude', 'problemasAlimentares'];
     let aluno = {};
 
     campos.forEach(campo => {
@@ -60,7 +62,6 @@ document.getElementById('cadastroAluno')?.addEventListener('submit', async funct
 });
 
 async function removerAluno(email) {
-    // Confirmação antes de remover
     if (!confirm(`Tem certeza que deseja remover o aluno com o e-mail ${email}?`)) {
         return;
     }
@@ -74,12 +75,8 @@ async function removerAluno(email) {
             return;
         }
 
-        // Remove o card do aluno
         document.getElementById(`card-${email}`)?.remove();
-
-        // Atualiza a lista de alunos no armazenamento local
-        const alunosAtualizados = carregarLocalmente().filter(a => a.email !== email);
-        salvarLocalmente(alunosAtualizados);
+        salvarLocalmente(carregarLocalmente().filter(a => a.email !== email));
 
         alert("Aluno removido com sucesso!");
     } catch (error) {
@@ -112,13 +109,11 @@ async function alterarDadosAluno(email, novosDados) {
             return;
         }
 
-        // Atualiza os dados no armazenamento local
         const alunosAtualizados = carregarLocalmente().map(aluno =>
             aluno.email === email ? { ...aluno, ...novosDados } : aluno
         );
         salvarLocalmente(alunosAtualizados);
 
-        // Atualiza a interface removendo e recriando o card do aluno
         document.getElementById(`card-${email}`)?.remove();
         adicionarCard({ email, ...novosDados });
 
@@ -148,10 +143,13 @@ async function carregarAlunos() {
     } catch (error) {
         console.error("Erro ao carregar alunos:", error);
     }
-    document.getElementById('botaoPesquisar')?.addEventListener('click', function () {
+}
+
+// Função de pesquisa por nome
+document.getElementById('botaoPesquisar')?.addEventListener('click', function () {
     const termoPesquisa = document.getElementById('pesquisa').value.toLowerCase();
     const lista = document.getElementById('listaAlunos');
-    lista.innerHTML = ""; // Limpa a lista antes de exibir os resultados
+    lista.innerHTML = ""; 
 
     const alunosSalvos = carregarLocalmente();
     const resultados = alunosSalvos.filter(aluno => aluno.nome.toLowerCase().includes(termoPesquisa));
@@ -162,15 +160,15 @@ async function carregarAlunos() {
         resultados.forEach(adicionarCard);
     }
 });
-document.getElementById('botaoLimparPesquisa')?.addEventListener('click', function () {
-    document.getElementById('pesquisa').value = ""; // Limpa o campo de pesquisa
-    const lista = document.getElementById('listaAlunos');
-    lista.innerHTML = ""; // Limpa os resultados anteriores
 
-    // Recarrega todos os alunos novamente
+// Função para limpar pesquisa
+document.getElementById('botaoLimparPesquisa')?.addEventListener('click', function () {
+    document.getElementById('pesquisa').value = ""; 
+    const lista = document.getElementById('listaAlunos');
+    lista.innerHTML = ""; 
+
     const alunosSalvos = carregarLocalmente();
     alunosSalvos.forEach(adicionarCard);
 });
-}
 
 window.addEventListener("DOMContentLoaded", carregarAlunos);
